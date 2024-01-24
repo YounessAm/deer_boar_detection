@@ -51,7 +51,7 @@ def detect_animal(url, YOLO_WEIGHTS_PATH, confidence=0.6):
     model = YOLO(YOLO_WEIGHTS_PATH)
 
     # Run inference
-    results = model.predict(source=url, conf=confidence, save=False)
+    results = model.predict(source=url, conf=confidence, save=False, device = 'cpu')
 
     # Extract results
     vars_names = ['x1', 'y1', 'x2', 'y2', 'score', 'class_id']
