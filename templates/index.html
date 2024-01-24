@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="centered">
+  <h1>API Documentation</h1>
+  <p>
+    Welcome to the API documentation for our animal detection.
+  </p>
+  <p>
+    What is this API? It's a new beautiful AI model wrap into an API to help detect a deer or a boar in an image and count them <br><br>
+    
+  </p>
+  <div>
+    <h2>Endpoints</h2>
+    <blockquote>
+      POST /prediction
+    </blockquote>
+    <div>
+      <p>
+        This endpoint allows you to make a detection.
+      </p>
+      <h3>
+        How to request this endpoint?
+      </h3>
+      <p>
+        You should request this endpoint using a POST method with a JSON content. Your JSON should contain at least "input" key with associated value (image_url or list of image_urls).
+      </p>
+      <p>
+        Example: <code>curl -i -H "Content-Type: application/json" -X POST -d '{"input": "http://www.pyreneanway.com/blog/wp-content/uploads/2018/11/wild-boar.jpg"}' http://localhost:5000/predict</code>
+      </p>
+      <p>
+        It returns a list of dictionary results  :
+        <pre>
+          <code>
+            output = [{
+              'img_source': image source (3 chanels list),
+              'img_annotated': annotated image (3 chanels list),
+              'number_of_detections_by_class': {'boar': nb of boars, 'deer': nb of deers},
+              'boxes': [{'class_id': 0.0,
+                        'score': 0.9666306972503662,
+                        'x1': 278.8862609863281,
+                        'x2': 806.2059326171875,
+                        'y1': 0.0,
+                        'y2': 726.2051391601562}]
+            }]
+          </code>
+        </pre>
+
+        you can plot the annotated image using PIL :<br>
+        <pre>
+          <code>
+            from PIL import Image<br>
+            import numpy as np<br>
+            <br>
+            annotated_img = output[0]['img_annotated']<br>
+            <br>
+            im_array = np.array(annotated_img).astype(np.uint8)  # Convert to a BGR numpy array
+            rgb_image = Image.fromarray(im_array[..., ::-1])  # Convert to an RGB PIL image
+            rgb_image.show()  # Show the image
+          </code>
+        </pre>
+      </p>
+      <p>
+        You can also have a list of image_urls  :
+      </p>
+      <pre>
+        <code>
+  $ curl -i -H "Content-Type: application/json" -X POST -d '{"input": ["http://www.pyreneanway.com/blog/wp-content/uploads/2018/11/wild-boar.jpg", "https://www.mammal.org.uk/wp-content/uploads/2021/09/boar-300x300.jpg"]}' http://localhost:5000/predict
+        </code>
+      </pre>
+      <p>
+        It returns a list of dictionaries = nb of urls
+      </p>
+         
+      
+      <h3>
+        Errors
+      </h3>
+      <p>
+        Our API will return an error with format:
+        <pre>
+          <code>
+  {
+    "code": <i>HTTP status code</i>,
+    "name": <i>name of this error</i>,
+    "description": <i>a short description</i>
+  }
+          </code>
+        </pre>
+      </p>
+      <p>
+        Identified errors:
+        <ul>
+          <li>Missing JSON</li>
+          <li>Missing key "input"</li>
+          <li>Input_type error</li>
+          <li>List input_Type error</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
