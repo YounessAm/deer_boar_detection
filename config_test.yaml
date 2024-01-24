@@ -1,0 +1,9 @@
+
+path: /home/matfox44/cerf_sanglier_detection/data
+train: /home/matfox44/cerf_sanglier_detection/data/images/train_data
+val: /home/matfox44/cerf_sanglier_detection/data/images/test_data
+
+# Classes 
+names:
+  0: boar
+  1: deer
